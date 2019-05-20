@@ -11,6 +11,7 @@ class Loading extends Component {
         <img
           src="https://loading.io/spinners/rolling/lg.curve-bars-loading-indicator.gif"
           style={{ height: 100, marginTop: 200, filter: "grayscale(100%)" }}
+          alt="loading.."
         />
       </div>
     );

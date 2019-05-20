@@ -4,6 +4,7 @@ import firebase, {
   googleProvider,
   facebookProvider
 } from "../../Config/firebase";
+// import axios from "axios";
 
 class Signup extends Component {
   constructor(props) {
@@ -30,7 +31,15 @@ class Signup extends Component {
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(res => {
-        this.setState({ signedUp: true });
+        firebase
+          .auth()
+          .currentUser.updateProfile({
+            displayName: this.state.firstname + " " + this.state.lastname
+          })
+          .then(response => {
+            window.location.href = "/";
+            this.setState({ signedUp: true });
+          });
       })
       .catch(function(error) {
         console.error(error);

@@ -2,8 +2,8 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { fetchUser } from "../Redux/Modules/Auth/auth";
 import { Switch, Route } from "react-router-dom";
-
 import "bootstrap/dist/css/bootstrap.css";
+
 // Import Components
 import Home from "./Auth/Home";
 import Signup from "./Auth/Signup";
@@ -28,27 +28,30 @@ class App extends Component {
 
   render() {
     console.log(this.props);
+
     return (
       <Fragment>
-        <Switch>
-          {this.props.currentUser === null ? (
-            <Loading />
-          ) : this.props.currentUser === false ? (
-            <Fragment>
+        {this.props.currentUser === null ? (
+          <Loading />
+        ) : this.props.currentUser === false ? (
+          <Fragment>
+            <Switch>
               <Route exact path="/login" component={Login} />
               <Route exact path="/signup" component={Signup} />
               <Route exact path="/" component={Home} />
-            </Fragment>
-          ) : (
-            <Fragment>
+              <Route component={NotFound} />
+            </Switch>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <Switch>
               <Route exact path="/" component={Feed} />
               <Route exact path="/profile" component={Profile} />
               <Route exact path="/community" component={Community} />
-            </Fragment>
-          )}
-
-          <Route component={NotFound} />
-        </Switch>
+              <Route component={NotFound} />
+            </Switch>
+          </Fragment>
+        )}
       </Fragment>
     );
   }

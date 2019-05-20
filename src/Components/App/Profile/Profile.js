@@ -10,7 +10,6 @@ class Profile extends Component {
     this.state = {};
   }
   render() {
-    console.log(this.props);
     let { currentUser } = this.props;
     return (
       <Fragment>
@@ -21,6 +20,7 @@ class Profile extends Component {
               src={currentUser.photoURL}
               style={{ borderRadius: "100%", width: 200 }}
               className="img-thumbnail mx-auto d-block mb-3"
+              alt="Profile"
             />
             <h1>{currentUser.displayName}</h1>
             <p className="lead mb-0">

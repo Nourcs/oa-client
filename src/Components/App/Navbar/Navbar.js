@@ -40,6 +40,7 @@ class Navbar extends Component {
                     height: 25,
                     marginRight: 10
                   }}
+                  alt="Profile"
                 />
                 {currentUser.firstName}
               </Link>
