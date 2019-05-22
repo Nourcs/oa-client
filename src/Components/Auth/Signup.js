@@ -4,7 +4,6 @@ import firebase, {
   googleProvider,
   facebookProvider
 } from "../../Config/firebase";
-// import axios from "axios";
 
 class Signup extends Component {
   constructor(props) {
@@ -163,7 +162,7 @@ class Signup extends Component {
                   <br />
                   <input
                     className="form-control"
-                    type="birthdate"
+                    type="date"
                     name="birthdate"
                     defaultValue={this.state.birthdate}
                     onChange={this.onInput}

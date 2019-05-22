@@ -11,6 +11,7 @@ import Login from "./Auth/Login";
 
 import Feed from "./App/Feed/Feed";
 import Profile from "./App/Profile/Profile";
+import Settings from "./App/Profile/Settings";
 import Community from "./App/Community/Community";
 
 import NotFound from "./Other/NotFound/NotFound";
@@ -47,6 +48,7 @@ class App extends Component {
             <Switch>
               <Route exact path="/" component={Feed} />
               <Route exact path="/profile" component={Profile} />
+              <Route exact path="/settings" component={Settings} />
               <Route exact path="/community" component={Community} />
               <Route component={NotFound} />
             </Switch>
