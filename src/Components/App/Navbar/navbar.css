@@ -1,0 +1,23 @@
+.dropdown {
+  -webkit-transition: all 10s; /* Safari */
+  transition: all 10s;
+  position: absolute;
+  top: 59px;
+  left: 60px;
+  display: none;
+  transition-timing-function: linear;
+}
+
+.dropdown > li {
+  background-color: #f8f9fa;
+  transition-timing-function: linear;
+
+  border: none;
+  border-radius: 0 !important;
+  width: 245px;
+}
+
+.show-dropdown {
+  transition-timing-function: linear;
+  display: block;
+}

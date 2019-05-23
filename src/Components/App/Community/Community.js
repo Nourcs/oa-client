@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from "react";
-import Navbar from "../Navbar/Navbar";
 
 class Community extends Component {
   constructor(props) {
@@ -9,7 +8,6 @@ class Community extends Component {
   render() {
     return (
       <Fragment>
-        <Navbar />
         <h1>Community</h1>
       </Fragment>
     );

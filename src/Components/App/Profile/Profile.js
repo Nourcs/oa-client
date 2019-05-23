@@ -2,7 +2,6 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { fetchUser } from "../../../Redux/Modules/Auth/auth";
 import { Link } from "react-router-dom";
-import Navbar from "../Navbar/Navbar";
 import axios from "axios";
 import keys from "../../../Config/keys";
 
@@ -36,7 +35,6 @@ class Profile extends Component {
               uid: this.props.currentUser.uid
             })
             .then(res => {
-              console.log(res.data);
               this.setState({ posts: res.data, newPost: "" });
             })
             .catch(err => {
@@ -55,7 +53,6 @@ class Profile extends Component {
         uid: this.props.currentUser.uid
       })
       .then(res => {
-        console.log("POOOSTS", res.data);
         this.setState({ posts: res.data });
       })
       .catch(err => {
@@ -67,7 +64,6 @@ class Profile extends Component {
     let { currentUser } = this.props;
     return (
       <Fragment>
-        <Navbar />
         <div className="jumbotron jumbotron-fluid">
           <div className="container text-center">
             <img
@@ -91,7 +87,7 @@ class Profile extends Component {
               <div className="card mx-auto mb-3">
                 <div className="card-body">
                   <h5>Create a post</h5>
-                  <form>
+                  <form method="post">
                     <input
                       type="text"
                       placeholder="What's on your mind?"
@@ -118,8 +114,12 @@ class Profile extends Component {
                           <img
                             src={item.from.photoURL}
                             style={{ height: 25, borderRadius: "100%" }}
+                            alt="profile"
                           />
-                          <Link to={"/" + item.from.uid} className="ml-2">
+                          <Link
+                            to={"/people/" + item.from.uid}
+                            className="ml-2"
+                          >
                             {item.from.displayName}
                           </Link>
                         </div>
@@ -137,6 +137,7 @@ class Profile extends Component {
                           <img
                             src={this.props.currentUser.photoURL}
                             style={{ height: 25, borderRadius: "100%" }}
+                            alt="profile"
                           />
                           <input
                             type="text"

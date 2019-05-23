@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from "react";
-import Navbar from "../Navbar/Navbar";
 
 class Feed extends Component {
   constructor(props) {
@@ -9,7 +8,6 @@ class Feed extends Component {
   render() {
     return (
       <Fragment>
-        <Navbar />
         <h1>Feed</h1>
       </Fragment>
     );

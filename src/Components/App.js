@@ -11,11 +11,13 @@ import Login from "./Auth/Login";
 
 import Feed from "./App/Feed/Feed";
 import Profile from "./App/Profile/Profile";
+import Other from "./App/Profile/Other";
 import Settings from "./App/Profile/Settings";
 import Community from "./App/Community/Community";
 
 import NotFound from "./Other/NotFound/NotFound";
 import Loading from "./Other/Loading/Loading";
+import Navbar from "./App/Navbar/Navbar";
 
 class App extends Component {
   constructor(props) {
@@ -45,8 +47,11 @@ class App extends Component {
           </Fragment>
         ) : (
           <Fragment>
+            {" "}
+            <Navbar />
             <Switch>
               <Route exact path="/" component={Feed} />
+              <Route exact path="/people/:id" component={Other} />
               <Route exact path="/profile" component={Profile} />
               <Route exact path="/settings" component={Settings} />
               <Route exact path="/community" component={Community} />

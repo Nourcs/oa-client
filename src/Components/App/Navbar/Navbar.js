@@ -3,11 +3,18 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { fetchUser } from "../../../Redux/Modules/Auth/auth";
 import firebase from "../../../Config/firebase";
+import "./navbar.css";
+import keys from "../../../Config/keys";
+import axios from "axios";
 
 class Navbar extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      search: "",
+      showDropdown: false,
+      people: []
+    };
   }
 
   logOut = () => {
@@ -21,15 +28,71 @@ class Navbar extends Component {
         console.error(error);
       });
   };
+
+  showDropdown = () => {
+    this.setState({ showDropdown: true });
+  };
+
+  hideDropdown = () => {
+    setTimeout(() => {
+      this.setState({ showDropdown: false, people: [], search: "" });
+    }, 100);
+  };
+
+  fetchPeople = e => {
+    this.setState({ search: e.target.value });
+    axios
+      .post(`${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/searchPeople`, {
+        search: e.target.value
+      })
+      .then(res => {
+        this.setState({ people: res.data });
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+
   render() {
     let { currentUser } = this.props;
-
+    let dropdownClass = this.state.showDropdown
+      ? "dropdown list-group show-dropdown"
+      : "dropdown list-group";
     return (
       <Fragment>
         <nav className="navbar navbar-expand navbar-light bg-light">
           <Link className="navbar-brand mb-0 h1" to="/">
             OA
           </Link>
+          <input
+            type="text"
+            className="form-control d-none d-md-block "
+            style={{ width: "30%", height: 30 }}
+            placeholder="Search"
+            onChange={this.fetchPeople}
+            onFocus={this.showDropdown}
+            onBlur={this.hideDropdown}
+            value={this.state.search}
+          />
+          <div className={dropdownClass}>
+            {this.state.people.map((item, index) => {
+              return (
+                <li
+                  className="list-group-item btn btn-light text-left"
+                  key={index}
+                >
+                  <img
+                    src={item.photoURL}
+                    style={{ height: 30, borderRadius: "100%" }}
+                    alt="profile"
+                  />
+                  <Link to={"/people/" + item.uid} className="ml-3">
+                    {item.displayName}
+                  </Link>
+                </li>
+              );
+            })}
+          </div>
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
               <Link className="nav-link" to="/profile">

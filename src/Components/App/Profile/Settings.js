@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from "react";
-import Navbar from "../Navbar/Navbar";
 import { connect } from "react-redux";
 import { fetchUser } from "../../../Redux/Modules/Auth/auth";
 import { Redirect } from "react-router-dom";
@@ -23,7 +22,6 @@ class Settings extends Component {
     return (
       <Fragment>
         {this.state.submitted ? <Redirect to="/profile" /> : ""}
-        <Navbar />
         <h1 className="mt-5 text-center">Settings</h1>
         <div className="row mb-5 ml-1">
           <div
