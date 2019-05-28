@@ -14,6 +14,7 @@ import Profile from "./App/Profile/Profile";
 import Other from "./App/Profile/Other";
 import Settings from "./App/Profile/Settings";
 import Community from "./App/Community/Community";
+import Nationality from "./App/Profile/Nationality";
 
 import NotFound from "./Other/NotFound/NotFound";
 import Loading from "./Other/Loading/Loading";
@@ -47,14 +48,21 @@ class App extends Component {
           </Fragment>
         ) : (
           <Fragment>
-            {" "}
-            <Navbar />
             <Switch>
-              <Route exact path="/" component={Feed} />
-              <Route exact path="/people/:id" component={Other} />
-              <Route exact path="/profile" component={Profile} />
-              <Route exact path="/settings" component={Settings} />
-              <Route exact path="/community" component={Community} />
+              {this.props.currentUser.nationality ? (
+                <Fragment>
+                  <Navbar />
+
+                  <Route exact path="/" component={Feed} />
+                  <Route exact path="/people/:id" component={Other} />
+                  <Route exact path="/profile" component={Profile} />
+                  <Route exact path="/settings" component={Settings} />
+                  <Route exact path="/community" component={Community} />
+                </Fragment>
+              ) : (
+                <Route exact path="/" component={Nationality} />
+              )}
+
               <Route component={NotFound} />
             </Switch>
           </Fragment>

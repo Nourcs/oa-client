@@ -4,14 +4,29 @@ import { fetchUser } from "../../../Redux/Modules/Auth/auth";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import keys from "../../../Config/keys";
+import "./style.css";
+import Post from "./Post";
 
 class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
       newPost: "",
-      posts: ""
+      posts: []
     };
+  }
+
+  componentDidMount() {
+    axios
+      .post(`${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/posts`, {
+        uid: this.props.currentUser.uid
+      })
+      .then(res => {
+        this.setState({ posts: res.data });
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
 
   onPostChange = e => {
@@ -46,19 +61,6 @@ class Profile extends Component {
         });
     }
   };
-
-  componentDidMount() {
-    axios
-      .post(`${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/posts`, {
-        uid: this.props.currentUser.uid
-      })
-      .then(res => {
-        this.setState({ posts: res.data });
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }
 
   render() {
     let { currentUser } = this.props;
@@ -106,49 +108,10 @@ class Profile extends Component {
                   </form>
                 </div>
               </div>
+              <Post />
               {this.state.posts.length > 0
                 ? this.state.posts.map((item, index) => {
-                    return (
-                      <div className="card mx-auto mb-3" key={index}>
-                        <div className="card-header d-flex">
-                          <img
-                            src={item.from.photoURL}
-                            style={{ height: 25, borderRadius: "100%" }}
-                            alt="profile"
-                          />
-                          <Link
-                            to={"/people/" + item.from.uid}
-                            className="ml-2"
-                          >
-                            {item.from.displayName}
-                          </Link>
-                        </div>
-                        <div className="card-body">
-                          <h5>{item.post}</h5>
-                          <label className="float-left text-muted">
-                            <i className="fas fa-heart" />
-                            <span className="badge badge-secondary bg-light text-secondary">
-                              2
-                            </span>
-                          </label>
-                        </div>
-
-                        <div className="card-footer d-flex justify-content-center align-items-center">
-                          <img
-                            src={this.props.currentUser.photoURL}
-                            style={{ height: 25, borderRadius: "100%" }}
-                            alt="profile"
-                          />
-                          <input
-                            type="text"
-                            placeholder="Write a comment..."
-                            name="question"
-                            className="form-control ml-3"
-                            style={{ borderRadius: "100px" }}
-                          />
-                        </div>
-                      </div>
-                    );
+                    return <Post post={item} key={index} />;
                   })
                 : ""}
             </div>

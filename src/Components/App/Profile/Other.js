@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { fetchUser } from "../../../Redux/Modules/Auth/auth";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import axios from "axios";
 import keys from "../../../Config/keys";
-
+import Post from "./Post";
 import _ from "lodash";
 
 class Other extends Component {
@@ -12,9 +12,11 @@ class Other extends Component {
     super(props);
     this.state = {
       newPost: "",
-      posts: "",
+      posts: [],
+      comments: [],
       currentProfile: {},
-      currentUser: false
+      currentUser: false,
+      following: false
     };
   }
 
@@ -27,13 +29,30 @@ class Other extends Component {
     axios
       .post(`${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/people/${id}`)
       .then(response => {
-        //this.setState({ currentProfile: res.data });
         axios
           .post(`${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/posts`, {
             uid: response.data.uid
           })
           .then(res => {
-            this.setState({ posts: res.data, currentProfile: response.data });
+            this.setState(
+              { posts: res.data, currentProfile: response.data },
+              () => {
+                axios
+                  .post(
+                    `${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/followers/${
+                      this.state.currentProfile._id
+                    }`,
+                    {
+                      currentUser: this.props.currentUser._id
+                    }
+                  )
+                  .then(res => {
+                    this.setState({
+                      following: res.data.following
+                    });
+                  });
+              }
+            );
           })
           .catch(err => {
             console.error(err);
@@ -44,8 +63,22 @@ class Other extends Component {
   componentWillReceiveProps(props, nextProps) {
     let id = props.match.params.id;
     if (id === this.props.currentUser.uid) {
-      this.setState({ currentUser: true });
+      this.setState({ currentUser: true }, () => {
+        this.setState({ comments: [] });
+        if (!_.isEmpty(props.post)) {
+          let { post } = props;
+          axios
+            .post(`${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/comments/${post._id}`)
+            .then(comment => {
+              if (comment.data.length > 0) {
+                let comments = [...comment.data];
+                this.setState({ comments });
+              }
+            });
+        }
+      });
     }
+
     axios
       .post(`${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/people/${id}`)
       .then(response => {
@@ -55,7 +88,25 @@ class Other extends Component {
             uid: response.data.uid
           })
           .then(res => {
-            this.setState({ posts: res.data, currentProfile: response.data });
+            this.setState(
+              { posts: res.data, currentProfile: response.data },
+              () => {
+                axios
+                  .post(
+                    `${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/followers/${
+                      this.state.currentProfile._id
+                    }`,
+                    {
+                      currentUser: this.props.currentUser._id
+                    }
+                  )
+                  .then(res => {
+                    this.setState({
+                      following: res.data.following
+                    });
+                  });
+              }
+            );
           })
           .catch(err => {
             console.error(err);
@@ -65,7 +116,6 @@ class Other extends Component {
 
   onPostChange = e => {
     let newPost = e.target.value;
-    console.log(newPost);
     this.setState({
       newPost
     });
@@ -73,33 +123,6 @@ class Other extends Component {
 
   newPost = e => {
     e.preventDefault();
-    // if (this.state.newPost.length > 0) {
-    //   axios
-    //     .post(
-    //       `${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/${
-    //         this.state.currentProfile.uid
-    //       }/newPost`,
-    //       {
-    //         uid: this.props.currentUser.uid,
-    //         newPost: this.state.newPost
-    //       }
-    //     )
-    //     .then(res => {
-    //       axios
-    //         .post(`${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/posts`, {
-    //           uid: this.state.currentProfile.uid
-    //         })
-    //         .then(res => {
-    //           this.setState({ posts: res.data, newPost: "" });
-    //         })
-    //         .catch(err => {
-    //           console.error(err);
-    //         });
-    //     })
-    //     .catch(err => {
-    //       console.error(err);
-    //     });
-    // }
     axios
       .post(
         `${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/${
@@ -122,6 +145,33 @@ class Other extends Component {
           });
       });
   };
+  onFollow = () => {
+    this.setState({ following: !this.state.following }, () => {
+      if (!this.state.following) {
+        axios
+          .post(
+            `${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/unfollow/${
+              this.state.currentProfile._id
+            }`,
+            { currentUser: this.props.currentUser._id }
+          )
+          .then(() => {
+            this.props.fetchUser();
+          });
+      } else {
+        axios
+          .post(
+            `${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/follow/${
+              this.state.currentProfile._id
+            }`,
+            { currentUser: this.props.currentUser._id }
+          )
+          .then(() => {
+            this.props.fetchUser();
+          });
+      }
+    });
+  };
 
   render() {
     let { currentProfile } = this.state;
@@ -139,6 +189,15 @@ class Other extends Component {
                 alt="Profile"
               />
               <h1>{currentProfile.displayName}</h1>
+              {this.state.following ? (
+                <button className="btn btn-light mb-0" onClick={this.onFollow}>
+                  Unfollow
+                </button>
+              ) : (
+                <button className="btn btn-light mb-0" onClick={this.onFollow}>
+                  Follow
+                </button>
+              )}
             </div>
           </div>
           <div className="container">
@@ -175,47 +234,7 @@ class Other extends Component {
                 </div>
                 {this.state.posts.length > 0
                   ? this.state.posts.map((item, index) => {
-                      return (
-                        <div className="card mx-auto mb-3" key={index}>
-                          <div className="card-header d-flex">
-                            <img
-                              src={item.from.photoURL}
-                              style={{ height: 25, borderRadius: "100%" }}
-                              alt="profile"
-                            />
-                            <Link
-                              to={"/people/" + item.from.uid}
-                              className="ml-2"
-                            >
-                              {item.from.displayName}
-                            </Link>
-                          </div>
-                          <div className="card-body">
-                            <h5>{item.post}</h5>
-                            <label className="float-left text-muted">
-                              <i className="fas fa-heart" />
-                              <span className="badge badge-secondary bg-light text-secondary">
-                                2
-                              </span>
-                            </label>
-                          </div>
-
-                          <div className="card-footer d-flex justify-content-center align-items-center">
-                            <img
-                              src={this.props.currentUser.photoURL}
-                              style={{ height: 25, borderRadius: "100%" }}
-                              alt="profile"
-                            />
-                            <input
-                              type="text"
-                              placeholder="Write a comment..."
-                              name="question"
-                              className="form-control ml-3"
-                              style={{ borderRadius: "100px" }}
-                            />
-                          </div>
-                        </div>
-                      );
+                      return <Post post={item} key={index} />;
                     })
                   : ""}
               </div>
