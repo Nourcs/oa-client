@@ -4,12 +4,17 @@ import { fetchUser } from "../../../Redux/Modules/Auth/auth";
 import Post from "../Profile/Post";
 import axios from "axios";
 import keys from "../../../Config/keys";
+
+const publicIp = require("public-ip");
+const iplocation = require("iplocation").default;
+
 class Feed extends Component {
   constructor(props) {
     super(props);
     this.state = {
       following: [],
-      posts: []
+      posts: [],
+      country: ""
     };
   }
 
@@ -20,6 +25,26 @@ class Feed extends Component {
       .then(res => {
         let posts = [...this.state.posts, ...res.data];
         this.setState({ posts });
+        (async () => {
+          iplocation(await publicIp.v4(), [], (error, res) => {
+            if (res) {
+              this.setState({ country: res });
+              axios
+                .post(
+                  `${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/updateUser/${
+                    this.props.currentUser._id
+                  }`,
+                  {
+                    nationality: this.props.currentUser.nationality,
+                    currentCity: res.city
+                  }
+                )
+                .then(res => {
+                  this.props.fetchUser();
+                });
+            }
+          });
+        })();
       });
   }
 
@@ -29,9 +54,15 @@ class Feed extends Component {
         <div className="container mt-5">
           <div className="row">
             <div className="col-8 offset-2">
-              {this.state.posts.map((item, index) => {
-                return <Post post={item} key={index} />;
-              })}
+              {this.state.posts.length > 0 ? (
+                this.state.posts.map((item, index) => {
+                  if (item.from.uid !== this.props.currentUser.uid) {
+                    return <Post post={item} key={index} />;
+                  } else return "";
+                })
+              ) : (
+                <div>It might be a good idea if you follow some people :)</div>
+              )}
             </div>
           </div>
         </div>

@@ -30,7 +30,7 @@ class Community extends Component {
         <div className="container-fluid mt-5">
           <div className=" mb-3">
             <h1>
-              {this.props.currentUser.nationality}s living in{" "}
+              {this.props.currentUser.nationality}s in{" "}
               {this.props.currentUser.currentCity}
             </h1>
           </div>

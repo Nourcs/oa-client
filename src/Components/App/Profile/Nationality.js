@@ -18,6 +18,7 @@ class Nationality extends Component {
     (async () => {
       iplocation(await publicIp.v4(), [], (error, res) => {
         if (res) {
+          console.log(res)
           this.setState({ country: res });
         }
       });

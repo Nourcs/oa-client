@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { fetchUser } from "../../../Redux/Modules/Auth/auth";
 import { Redirect } from "react-router-dom";
+import nationalities from "./nationalities.json";
 
 class Settings extends Component {
   constructor(props) {
@@ -39,7 +40,7 @@ class Settings extends Component {
                     className="form-control"
                     defaultValue={currentUser.displayName}
                   />
-                </div>{" "}
+                </div>
                 <label>Email</label>
                 <div className="form-group">
                   <input
@@ -50,6 +51,8 @@ class Settings extends Component {
                     defaultValue={currentUser.email}
                   />
                 </div>
+                <label>Password</label>
+
                 <div className="form-group">
                   <input
                     type="password"
@@ -57,6 +60,27 @@ class Settings extends Component {
                     placeholder="Password"
                     className="form-control"
                   />
+                </div>
+                <label>Where are you from?</label>
+                <div className="form-group d-flex">
+                  <select
+                    className="form-control"
+                    defaultValue={currentUser.nationality}
+                    value={this.state.value}
+                    onChange={this.handleChange}
+                  >
+                    {nationalities.map((item, index) => {
+                      return (
+                        <option
+                          value={item.adj}
+                          key={index}
+                          className="form-control"
+                        >
+                          {item.country}
+                        </option>
+                      );
+                    })}
+                  </select>
                 </div>
                 <div className="form-group">
                   <label>Birthday</label>
@@ -68,6 +92,7 @@ class Settings extends Component {
                     defaultValue={currentUser.birthdate}
                   />
                 </div>
+
                 <label>Gender</label>
                 <div className="form-group d-flex ">
                   <div className="form-check mr-4 ">

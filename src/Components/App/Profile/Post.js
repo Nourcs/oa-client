@@ -134,6 +134,16 @@ class Post extends Component {
             <Link to={"/people/" + post.from.uid} className="ml-2">
               {post.from.displayName}
             </Link>
+            {post.to.displayName !== post.from.displayName ? (
+              <div className="ml-2">
+                to
+                <Link to={"/people/" + post.to.uid} className="ml-2">
+                  {post.to.displayName}
+                </Link>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
           <div className="card-body">
             <h5>{post.post}</h5>

@@ -52,7 +52,6 @@ class App extends Component {
               {this.props.currentUser.nationality ? (
                 <Fragment>
                   <Navbar />
-
                   <Route exact path="/" component={Feed} />
                   <Route exact path="/people/:id" component={Other} />
                   <Route exact path="/profile" component={Profile} />

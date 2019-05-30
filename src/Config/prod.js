@@ -5,5 +5,5 @@ module.exports = {
   projectId: process.env.PROJECT_ID,
   storageBucket: process.env.STORAGE_BUCKET,
   messagingSenderId: process.env.MESSAGING_SENDER_ID,
-  baseURL: "http://localhost:5000"
+  baseURL: process.env.BASE_URL
 };
