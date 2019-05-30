@@ -21,3 +21,21 @@
   transition-timing-function: linear;
   display: block;
 }
+
+.hide-menu {
+  display: none !important;
+}
+
+.menu {
+  position: absolute;
+  left: 0;
+  top: 56px;
+  height: 100vh;
+  width: 100%;
+  background-color: #f8f9fa;
+  z-index: 999;
+}
+
+.display-inline {
+  /* display: flex !important; */
+}
