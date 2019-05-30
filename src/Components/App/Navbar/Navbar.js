@@ -61,13 +61,13 @@ class Navbar extends Component {
     return (
       <Fragment>
         <nav className="navbar navbar-expand navbar-light bg-light">
-          <Link className="navbar-brand mb-0 h1" to="/">
+          <Link className="navbar-brand mb-0 h1 d-none d-md-block " to="/">
             OA
           </Link>
           <input
             type="text"
-            className="form-control d-none d-md-block "
-            style={{ width: "30%", height: 30 }}
+            className="form-control"
+            style={{ width: "35%", height: 30 }}
             placeholder="Search"
             onChange={this.fetchPeople}
             onFocus={this.showDropdown}
@@ -116,7 +116,7 @@ class Navbar extends Component {
             </li>
             <li className="nav-item">
               <Link to="/" className="nav-link" onClick={this.logOut}>
-                Logout
+                <i class="fas fa-sign-out-alt" />{" "}
               </Link>
             </li>
           </ul>
