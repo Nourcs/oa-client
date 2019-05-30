@@ -21,7 +21,10 @@ class Feed extends Component {
   componentDidMount() {
     let { following } = this.props.currentUser;
     axios
-      .post(`${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/feedPosts`, { following })
+      .post(`${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/feedPosts`, {
+        following,
+        postLength: 0
+      })
       .then(res => {
         let posts = [...this.state.posts, ...res.data];
         this.setState({ posts });
@@ -47,21 +50,46 @@ class Feed extends Component {
         })();
       });
   }
+  showMore = () => {
+    let { following } = this.props.currentUser;
+
+    axios
+      .post(`${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/feedPosts`, {
+        postLength: this.state.posts.length,
+        following
+      })
+      .then(res => {
+        this.setState({ posts: res.data });
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
 
   render() {
     return (
       <Fragment>
         <div className="container mt-5">
           <div className="row">
-            <div className="col-8 offset-2">
+            <div className="col-md-6 offset-md-3">
               {this.state.posts.length > 0 ? (
                 this.state.posts.map((item, index) => {
-                  if (item.from.uid !== this.props.currentUser.uid) {
-                    return <Post post={item} key={index} />;
-                  } else return "";
+                  return <Post post={item} key={index} />;
                 })
               ) : (
-                <div>It might be a good idea if you follow some people :)</div>
+                <div className="col-10 offset-1 display-4 text-center">
+                  Follow some people
+                </div>
+              )}
+              {this.state.posts.length > 0 ? (
+                <button
+                  className="mb-5 btn btn-dark w-100"
+                  onClick={this.showMore}
+                >
+                  Show more
+                </button>
+              ) : (
+                ""
               )}
             </div>
           </div>

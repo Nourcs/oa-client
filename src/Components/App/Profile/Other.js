@@ -31,9 +31,11 @@ class Other extends Component {
       .then(response => {
         axios
           .post(`${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/posts`, {
+            postLength: 0,
             uid: response.data.uid
           })
           .then(res => {
+            console.log(res.data);
             this.setState(
               { posts: res.data, currentProfile: response.data },
               () => {
@@ -85,6 +87,7 @@ class Other extends Component {
         //this.setState({ currentProfile: res.data });
         axios
           .post(`${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/posts`, {
+            postLength: this.state.posts.length,
             uid: response.data.uid
           })
           .then(res => {
@@ -173,6 +176,20 @@ class Other extends Component {
     });
   };
 
+  showMore = () => {
+    axios
+      .post(`${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/posts`, {
+        postLength: this.state.posts.length,
+        uid: this.state.currentProfile.uid
+      })
+      .then(res => {
+        this.setState({ posts: res.data });
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+
   render() {
     let { currentProfile } = this.state;
     if (!_.isEmpty(currentProfile)) {
@@ -237,6 +254,16 @@ class Other extends Component {
                       return <Post post={item} key={index} />;
                     })
                   : ""}
+                {this.state.posts.length > 0 ? (
+                  <button
+                    className="mb-5 btn btn-dark w-100"
+                    onClick={this.showMore}
+                  >
+                    Show more
+                  </button>
+                ) : (
+                  ""
+                )}
               </div>
             </div>
           </div>

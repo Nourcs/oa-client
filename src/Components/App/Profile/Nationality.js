@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { fetchUser } from "../../../Redux/Modules/Auth/auth";
 import axios from "axios";
 import keys from "../../../Config/keys";
+import _ from "lodash";
 
 const publicIp = require("public-ip");
 const iplocation = require("iplocation").default;
@@ -18,7 +19,7 @@ class Nationality extends Component {
     (async () => {
       iplocation(await publicIp.v4(), [], (error, res) => {
         if (res) {
-          console.log(res)
+          console.log(res);
           this.setState({ country: res });
         }
       });
@@ -32,16 +33,23 @@ class Nationality extends Component {
   handleSubmit = e => {
     e.preventDefault();
     console.log(this.props.currentUser);
-    axios
-      .post(
-        `${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/updateUser/${
-          this.props.currentUser._id
-        }`,
-        { nationality: this.state.value, currentCity: this.state.country.city }
-      )
-      .then(res => {
-        this.props.fetchUser();
-      });
+    if (!_.isEmpty(this.state.country)) {
+      axios
+        .post(
+          `${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/updateUser/${
+            this.props.currentUser._id
+          }`,
+          {
+            nationality: this.state.value,
+            currentCity: this.state.country.city
+          }
+        )
+        .then(res => {
+          this.props.fetchUser();
+        });
+    } else {
+      alert("Please Disable Adblockers and Refresh.");
+    }
   };
   render() {
     console.log(this.state, this.props);

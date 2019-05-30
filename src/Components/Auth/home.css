@@ -32,3 +32,13 @@ body {
   color: #6b747d;
   background-color: #fcfcfa;
 }
+
+.bg-image {
+  background-size: repeat !important;
+  position: absolute;
+  top: 0;
+  width: 250vh;
+  height: 100vh;
+  z-index: -1;
+  /* filter: blur(2px); */
+}

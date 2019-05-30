@@ -19,6 +19,7 @@ class Profile extends Component {
   componentDidMount() {
     axios
       .post(`${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/posts`, {
+        postLength: this.state.posts.length,
         uid: this.props.currentUser.uid
       })
       .then(res => {
@@ -47,6 +48,7 @@ class Profile extends Component {
         .then(res => {
           axios
             .post(`${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/posts`, {
+              postLength: 0,
               uid: this.props.currentUser.uid
             })
             .then(res => {
@@ -60,6 +62,20 @@ class Profile extends Component {
           console.error(err);
         });
     }
+  };
+
+  showMore = () => {
+    axios
+      .post(`${keys.baseURL}/BRXIArWSf2sCHprS2bQ4/posts`, {
+        postLength: this.state.posts.length,
+        uid: this.props.currentUser.uid
+      })
+      .then(res => {
+        this.setState({ posts: res.data });
+      })
+      .catch(err => {
+        console.error(err);
+      });
   };
 
   render() {
@@ -114,6 +130,16 @@ class Profile extends Component {
                     return <Post post={item} key={index} />;
                   })
                 : ""}
+              {this.state.posts.length > 0 ? (
+                <button
+                  className="mb-5 btn btn-dark w-100"
+                  onClick={this.showMore}
+                >
+                  Show more
+                </button>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </div>

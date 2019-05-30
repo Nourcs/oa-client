@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 
 import { Link } from "react-router-dom";
 import _ from "lodash";
@@ -6,6 +6,7 @@ import axios from "axios";
 import keys from "../../../Config/keys";
 import { connect } from "react-redux";
 import { fetchUser } from "../../../Redux/Modules/Auth/auth";
+import moment from "moment";
 
 class Post extends Component {
   constructor(props) {
@@ -131,21 +132,30 @@ class Post extends Component {
               style={{ height: 25, borderRadius: "100%" }}
               alt="profile"
             />
-            <Link to={"/people/" + post.from.uid} className="ml-2">
-              {post.from.displayName}
-            </Link>
+
             {post.to.displayName !== post.from.displayName ? (
-              <div className="ml-2">
-                to
-                <Link to={"/people/" + post.to.uid} className="ml-2">
-                  {post.to.displayName}
+              <div className="w-100">
+                <Link to={"/people/" + post.from.uid} className="ml-2">
+                  {post.from.firstName}
                 </Link>
+                <i className="fas fa-long-arrow-alt-right m-1 text-muted" />
+                <Link to={"/people/" + post.to.uid}>{post.to.firstName}</Link>
               </div>
             ) : (
-              ""
+              <Link to={"/people/" + post.from.uid} className="ml-2">
+                {post.from.displayName}
+              </Link>
             )}
+            <p
+              className="text-muted small"
+              style={{ position: "absolute", right: 10, top: 15 }}
+            >
+              {moment(post.createdAt).fromNow()}
+            </p>
           </div>
           <div className="card-body">
+            {/* <p>{moment(post.createdAt, "YYYYMMDD").from(moment.utc().format())}</p> */}
+
             <h5>{post.post}</h5>
             <label className="float-left text-muted">
               <i
