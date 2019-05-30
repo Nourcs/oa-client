@@ -184,11 +184,14 @@ class Post extends Component {
                   key={index}
                   className="card-footer d-flex justify-content-center align-items-center"
                 >
-                  <img
-                    src={comment.from.photoURL}
-                    style={{ height: 25, borderRadius: "100%" }}
-                    alt="profile"
-                  />
+                  <Link to={"people/" + comment.from.uid}>
+                    <img
+                      src={comment.from.photoURL}
+                      style={{ height: 25, borderRadius: "100%" }}
+                      alt="profile"
+                    />
+                  </Link>
+
                   <p
                     type="text"
                     name="question"
